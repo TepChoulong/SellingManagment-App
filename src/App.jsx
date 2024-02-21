@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import Header from "./components/Header";
+import History_Table from "./components/History_Table";
 
 function App() {
   return (
@@ -10,17 +11,7 @@ function App() {
         <div className="contents-container">
           <h1 className="text-3xl mt-4 text-center">Histories</h1>
           <div className="histories-table-container">
-            <table className="mt-4">
-              <tr>
-                <th>Sold Items</th>
-                <th>Date</th>
-                <th>Profit</th>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-              </tr>
-            </table>
+            <History_Table />
           </div>
         </div>
       </div>
