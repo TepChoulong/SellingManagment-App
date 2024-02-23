@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/history", async (req, res) => {
+app.get("/history_product", async (req, res) => {
   try {
     const products_histories = await HistoryModel.find();
     if (products_histories === "") {
