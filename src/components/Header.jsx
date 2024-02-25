@@ -4,7 +4,15 @@ import NavBar from "../components/NavBar";
 import { useState } from "react";
 
 export default function Header() {
-  const [openMenu, setOpenMenu] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleNavbar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeNavbar = () => {
+    setIsOpen(false);
+  };
 
   return (
     <div className="header-container">
@@ -15,12 +23,14 @@ export default function Header() {
         </h1>
         <button
           className="menu-btn border pl-1 pr-1 pt-sm pb-sm rounded-lg"
-          onClick={() => setOpenMenu(!openMenu)}
+          onClick={() => toggleNavbar()}
         >
           <i className="bi bi-list text-white text-3xl"></i>
         </button>
       </div>
-      <div className="nav-bar-container">{openMenu ? <NavBar /> : null}</div>
+      <div className="nav-bar-container">
+        {isOpen ? <NavBar closeNavbar={() => closeNavbar()} /> : null}
+      </div>
     </div>
   );
 }

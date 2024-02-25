@@ -1,21 +1,20 @@
-import { useState } from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Header from "./components/Header";
-import History_Table from "./components/History_Table";
+import Layout from "./Layout";
+import Homepage from "./pages/Hompage";
+import CreateNewHistory from "./pages/CreateNewHistory";
+import NoPage from "./NoPage";
 
 function App() {
   return (
-    <>
-      <div className="app">
-        <Header />
-        <div className="contents-container">
-          <h1 className="text-3xl mt-4 text-center">Histories</h1>
-          <div className="histories-table-container">
-            <History_Table />
-          </div>
-        </div>
-      </div>
-    </>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Homepage />} />
+        <Route path="create-new-history" element={<CreateNewHistory />} />
+        <Route path="*" element={<NoPage />} />
+      </Route>
+    </Routes>
   );
 }
 

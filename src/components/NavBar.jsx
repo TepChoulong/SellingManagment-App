@@ -1,23 +1,24 @@
 import { Link } from "react-router-dom";
 
-export default function NavBar() {
+export default function NavBar({ isOpen, closeNavbar }) {
   return (
     <nav className="transition duration-500 ease-in-out">
       <ul>
         <li className="p-2 bg-sky-600 text-center text-white border">
-          <Link>Home</Link>
+          <Link to={"/"} onClick={closeNavbar}>
+            Home
+          </Link>
         </li>
         <li className="p-2 bg-sky-600 text-center text-white border">
-          <Link>Drinks</Link>
+          <Link to={"/create-new-history"} onClick={closeNavbar}>
+            {" "}
+            Create New History
+          </Link>
         </li>
         <li className="p-2 bg-sky-600 text-center text-white border">
-          <Link>Noodles</Link>
-        </li>
-        <li className="p-2 bg-sky-600 text-center text-white border">
-          <Link>Ingredients</Link>
-        </li>
-        <li className="p-2 bg-sky-600 text-center text-white border">
-          <Link>Bathroom Supplies</Link>
+          <Link to={"/prices-tags"} onClick={closeNavbar}>
+            Prices Tags
+          </Link>
         </li>
       </ul>
     </nav>
