@@ -1,6 +1,8 @@
 import express, { json } from "express";
 import dotenv from "dotenv";
 import Mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cors from "cors";
 
 import ProductRouter from "./routers/ProductsRouter.js";
 
@@ -9,7 +11,8 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(cors());
 
 const url = process.env.MONGOOSE_DB_URL;
 
