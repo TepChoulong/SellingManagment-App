@@ -5,7 +5,7 @@ export default function CreateNewHistory() {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState(0);
-  const [productType, setProductType] = useState("drinks");
+  const [productType, setProductType] = useState("");
 
   const dataForm = {
     productName,
