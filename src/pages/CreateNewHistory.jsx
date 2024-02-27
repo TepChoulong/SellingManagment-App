@@ -7,22 +7,27 @@ export default function CreateNewHistory() {
   const [quantity, setQuantity] = useState(0);
   const [productType, setProductType] = useState("");
 
-  const dataForm = {
-    productName,
-    quantity,
-    productType,
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const updatedTotalQuantity = handleTotalQuantityChange(); // Update totalQuantity
+      setTotalQuantity(updatedTotalQuantity); // Update the totalQuantity state
+
+      const dataForm = {
+        totalQuantity: updatedTotalQuantity,
+        productName,
+        quantity,
+        productType,
+      };
+
       const response = await axios.post(
         "http://localhost:8000/products",
         dataForm
       );
       const data = response.data;
-
       console.log(data);
+
+      console.log(totalQuantity);
 
       // Reset form fields
       setProductName("");
@@ -31,6 +36,12 @@ export default function CreateNewHistory() {
     } catch (error) {
       console.error("Error adding data:", error);
     }
+  };
+
+  const handleTotalQuantityChange = () => {
+    return totalQuantity <= 0
+      ? parseInt(quantity)
+      : totalQuantity + parseInt(quantity);
   };
 
   return (

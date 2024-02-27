@@ -1,11 +1,5 @@
 import HistoryModel from "../models/History_db.js";
 
-const currentDate = new Date();
-const day = currentDate.getDate();
-const month = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns 0-indexed month
-const year = currentDate.getFullYear();
-const currentDateFormatted = `${year}-${month}-${day}`;
-
 const getProducts = async (req, res) => {
   try {
     const products_histories = await HistoryModel.find();
@@ -21,43 +15,75 @@ const getProducts = async (req, res) => {
 };
 
 const addProducts = async (req, res) => {
-  const { productName, productType, quantity } = req.body;
+  const { productName, quantity, productType, totalQuantity } = req.body;
+  const currentDate = new Date().toISOString().slice(0, 10); // Get current date in 'YYYY-MM-DD' format
 
   try {
     // replace space with _ and make it lower case
     let trimProductName = productName.replace(/\s+/g, "_").toLowerCase();
 
+    // checking if there is an existing history
     let existingHistory = await HistoryModel.findOne({
-      date: currentDateFormatted,
+      date: currentDate,
     });
 
-    const newHistoryForm = {
-      sold_quantity: 0,
-      date: currentDateFormatted,
-      products: {
-        [productType]: {
-          [trimProductName]: quantity,
-        },
-      },
-    };
-
     if (!existingHistory) {
+      const historyDataForm = {
+        date: currentDate,
+        sold_quantity: totalQuantity,
+        products: {
+          [productType]: {
+            [trimProductName]: quantity,
+          },
+        },
+      };
+
       // Create a new history
-      const createNewHistory = await HistoryModel.create(newHistoryForm);
+      const createNewHistory = await HistoryModel.create(historyDataForm);
       res.status(201).json(createNewHistory);
     } else {
-      // Add new history to existing history
-      const addNewHistoryToExistingHistory = await HistoryModel.insertMany({
-        [productType]: {
-          [trimProductName]: quantity,
-        },
-      });
-      res.status(201).json(addNewHistoryToExistingHistory);
+      const updatedProducts = { ...existingHistory.products };
+
+      if (!updatedProducts[productType]) {
+        // If the product type doesn't exist in existing history, create a new entry
+        updatedProducts[productType] = { [trimProductName]: quantity };
+      } else {
+        if (updatedProducts[productType][trimProductName]) {
+          // If the product already exists, update the quantity
+          updatedProducts[productType][trimProductName] += quantity;
+        } else {
+          // If the product doesn't exist, add it with the provided quantity
+          updatedProducts[productType][trimProductName] = quantity;
+        }
+      }
+
+      // Calculate new sold quantity
+      const newSoldQuantity = totalQuantity;
+
+      existingHistory = await HistoryModel.findOneAndUpdate(
+        { date: currentDate },
+        { products: updatedProducts, sold_quantity: newSoldQuantity },
+        { new: true }
+      );
+      res.status(201).json(existingHistory);
     }
-    await existingHistory.save();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-export default { getProducts, addProducts };
+const deleteProduct = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const deletedHistory = await HistoryModel.findByIdAndDelete(req.params.id);
+    if (!deletedHistory) {
+      return res.status(404).send("History not found");
+    }
+    return res.send("History deleted successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+export default { getProducts, addProducts, deleteProduct };

@@ -8,6 +8,6 @@ router
   .get("/", productController.getProducts)
   .post("/", productController.addProducts)
   .put("/", async (req, res) => {})
-  .delete("/", async (req, res) => {});
+  .delete("/:id", productController.deleteProduct);
 
 export default router;
