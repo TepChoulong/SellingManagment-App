@@ -14,6 +14,22 @@ const getProducts = async (req, res) => {
   }
 };
 
+const getProductById = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const products_history = await HistoryModel.findById(id);
+    if (products_history === "") {
+      res.status(404).json({ message: "No history found" });
+    } else {
+      res.json(products_history);
+    }
+  } catch (error) {
+    console.error("Error fetching history:", error);
+    res.status(500).json({ message: "Error fetching history" });
+  }
+};
+
 const addProducts = async (req, res) => {
   const { productName, quantity, productType, totalQuantity } = req.body;
   const currentDate = new Date().toISOString().slice(0, 10); // Get current date in 'YYYY-MM-DD' format
@@ -56,7 +72,6 @@ const addProducts = async (req, res) => {
           updatedProducts[productType][trimProductName] = quantity;
         }
       }
-
       // Calculate new sold quantity
       const newSoldQuantity = totalQuantity;
 
@@ -86,4 +101,4 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-export default { getProducts, addProducts, deleteProduct };
+export default { getProducts, addProducts, deleteProduct, getProductById };

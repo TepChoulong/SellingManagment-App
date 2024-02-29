@@ -6,6 +6,7 @@ const router = express.Router();
 
 router
   .get("/", productController.getProducts)
+  .get("/:id", productController.getProductById)
   .post("/", productController.addProducts)
   .put("/", async (req, res) => {})
   .delete("/:id", productController.deleteProduct);
