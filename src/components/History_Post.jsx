@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function History_Post() {
   const [data, setData] = useState([]);
   const [id, setId] = useState("");
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -19,21 +22,22 @@ export default function History_Post() {
     }
   };
 
-  const LoadMore = () => {
-    return <Navigate to={`/products/${id}`} />;
+  const LoadMore = (id) => {
+    navigate(`/products/${id}`);
   };
+
   return (
     <tr className="text-center bg-slate-200">
       {data.map((element) => {
         return (
           <>
-            <td>{element.sold_quantity}</td>
-            <td>{element.date}</td>
-            <td>{element.profits}</td>
+            <td key={"sold_quantity"}>{element.sold_quantity}</td>
+            <td key={"date"}>{element.date}</td>
+            <td key={"profits"}>{element.profits}</td>
             <td>
               <button
                 className="load-more-btn font-semibold text-blue-700"
-                onClick={LoadMore}
+                onClick={() => LoadMore(element._id)}
               >
                 Load More
               </button>
