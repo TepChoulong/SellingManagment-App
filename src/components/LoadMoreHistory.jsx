@@ -43,10 +43,25 @@ export default function LoadMoreHistory() {
           {data.map((item) => {
             const productName = item.products;
             const productType = Object.keys(productName);
+
             const finalProductName = Object.keys(productName[productType]);
+            const finalProductQuantity = Object.values(
+              productName[productType]
+            );
+
             console.log(finalProductName);
 
-            return <tr className="text-center text-ml" key={item._id}></tr>;
+            return (
+              <>
+                {finalProductName.map((name) => (
+                  <tr className="text-center text-ml" key={name}>
+                    <td>{name}</td>
+                    <td>{productName[productType][name]}</td>
+                    <td>{item.date}</td>
+                  </tr>
+                ))}
+              </>
+            );
           })}
         </tbody>
       </table>
